@@ -1,15 +1,7 @@
-flags_shop_one:
-  image: vimagick/rinetd
-  volumes:
-    - ./data:/etc/rinetd
-  ports:
-      - "8080:8080"
-  restart: always
-
 flags_shop_two:
   image: vimagick/rinetd
   volumes:
     - ./data:/etc/rinetd
   ports:
-      - "8081:8080"
+      - "8080:8080"
   restart: always
