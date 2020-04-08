@@ -165,32 +165,39 @@ do
   			echo "$option: invalid selection."
   			read -p "Select an option: " option
   		done
+      case "$option" in
+        1)
+        clear
+        read -p "Service name : " name
+        until echo "$name" | egrep "^[a-z_]+$" ; do
+          echo "Str must be ^[a-z_]+$."
+          read -p "Service name: " name
+        done
+        clear
 
-      clear
-      read -p "Service name : " name
-      until echo "$name" | egrep "^[a-z_]+$" ; do
-        echo "Str must be ^[a-z_]+$."
-        read -p "Service name: " name
-      done
-      clear
-
-      read -p "Port : " port
-      until [[ -z "$port" || "$port" =~ ^[0-9]+$ && "$port" -le 65535 ]]; do
-        echo "$port: invalid selection."
         read -p "Port : " port
-      done
-      clear
+        until [[ -z "$port" || "$port" =~ ^[0-9]+$ && "$port" -le 65535 ]]; do
+          echo "$port: invalid selection."
+          read -p "Port : " port
+        done
+        clear
 
-      read -p "IP : " ip
-      until echo "$ip" | egrep "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" ; do
-        echo "$ip: invalid selection"
         read -p "IP : " ip
-      done
+        until echo "$ip" | egrep "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" ; do
+          echo "$ip: invalid selection"
+          read -p "IP : " ip
+        done
 
-      mkdir $name
-      echo "0.0.0.0 8080 $ip $port" > $name/rinetd.conf
-      echo "$port" > $name/port
-      echo "$ip" > $name/ip
+        mkdir $name
+        echo "0.0.0.0 8080 $ip $port" > $name/rinetd.conf
+        echo "$port" > $name/port
+        echo "$ip" > $name/ip
+        ;;
+        2)
+        exit ;;
+      esac
+
+
 
 
   	else
