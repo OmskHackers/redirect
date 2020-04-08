@@ -107,6 +107,7 @@ do
           done
 
           clear
+          echo "$(tput setaf 6)$srv $(tput sgr 0)"
           echo "1) Up"
           echo "2) Down"
           echo "3) Edit"
@@ -196,10 +197,6 @@ do
         2)
         exit ;;
       esac
-
-
-
-
   	else
   		echo "Docker is not installed on your system"
   		exit
