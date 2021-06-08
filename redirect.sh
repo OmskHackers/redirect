@@ -54,13 +54,13 @@ do
   			clear
 
   			read -p "IP : " ip
-  			until echo "$ip" | egrep "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" ; do
+  			until echo "$ip" ; do
   				echo "$ip: invalid selection"
   				read -p "IP : " ip
   			done
 
   			mkdir $name
-  			echo "0.0.0.0 8080 $ip $port" > $name/rinetd.conf
+  			echo ":: $port $ip $port" > $name/rinetd.conf
   			echo "$port" > $name/port
         echo "$ip" > $name/ip
 
@@ -131,18 +131,18 @@ do
               sleep 2
               continue
             fi
-            docker run --name redirect_$srv -p $cat_port:8080 --restart always -v $(pwd)/$srv:/etc/rinetd -td vimagick/rinetd
+            docker run --name redirect_$srv -p $cat_port:$cat_port --net=host --restart always -v $(pwd)/$srv:/etc/rinetd -td swager
           elif [ "$status" == "2" ];then
            docker stop redirect_$srv
            docker rm redirect_$srv
          elif [ "$status" == "3" ];then
            cat_port=$(cat $srv/port)
            read -p "IP : " ip
-     			 until echo "$ip" | egrep "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" ; do
+     			 until echo "$ip" ; do
      				echo "$ip: invalid selection"
      				read -p "IP : " ip
      			 done
-           echo "0.0.0.0 8080 $ip $cat_port" > $srv/rinetd.conf
+           echo ":: $cat_port $ip $cat_port" > $srv/rinetd.conf
            echo "$ip" > $srv/ip
          fi
         done
@@ -153,9 +153,9 @@ do
   	done
   else
   	if echo "$docker_version" | grep 'version' > /dev/null;then
-      check_image=$(docker images | grep vimagick/rinetd)
+      check_image=$(docker images | grep swager)
       if [ "$check_image" == "" ];then
-        echo "docker pull vimagick/rinetd"
+        echo "docker build -t swager ."
         exit
       fi
 
@@ -184,13 +184,13 @@ do
         clear
 
         read -p "IP : " ip
-        until echo "$ip" | egrep "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" ; do
+        until echo "$ip" ; do
           echo "$ip: invalid selection"
           read -p "IP : " ip
         done
 
         mkdir $name
-        echo "0.0.0.0 8080 $ip $port" > $name/rinetd.conf
+        echo ":: $port  $ip $port" > $name/rinetd.conf
         echo "$port" > $name/port
         echo "$ip" > $name/ip
         ;;
